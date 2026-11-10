@@ -1,5 +1,6 @@
-# Pocket Black Box
 A tool that works offline during floods or cyclones (highly relevant in West Bengal). Volunteers log reports by voice or text, a small local model classifies urgency and needs (medical, rescue, food), and phones sync peer-to-peer over Bluetooth/Wi-Fi Direct into a live priority map. Stack: Python, Whisper (small), a lightweight classifier, SQLite with CRDT-style sync, Folium for maps. Judges love resilience plus social impact.
+
+# Pocket Black Box
 
 Pocket Black Box is an offline-first Android demo for volunteer incident intake and emergency
 triage. It stores reports in app-private SQLite, classifies English and Bengali text on-device,
