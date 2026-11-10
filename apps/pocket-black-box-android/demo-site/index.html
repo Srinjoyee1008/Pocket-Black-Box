@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f4">
+    <meta name="description" content="Pocket Black Box — an offline-first emergency triage demo for local volunteer teams.">
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Pocket Black Box — Field desk</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="Pocket Black Box home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 40 40"><path d="M20 3 35 11.5v17L20 37 5 28.5v-17L20 3Z"/><path d="M20 11v18M11 20h18"/></svg>
+          </span>
+          <span class="brand-copy"><strong>pocket<span>black</span>box</strong><small>FIELD DESK <i>·</i> WEST BENGAL</small></span>
+        </a>
+        <div class="topbar-right">
+          <div class="local-status"><span class="pulse-dot"></span><span>LOCAL ONLY</span><span class="status-divider"></span><span>Changes saved on this device</span></div>
+          <button class="avatar" type="button" aria-label="Volunteer profile">V</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="intro">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line"></span> EMERGENCY RESPONSE <span class="eyebrow-divider">/</span> SUNDARBANS</p>
+            <h1>Keep the signal.<br><span>Find who needs help.</span></h1>
+            <p class="intro-copy">A calm, local-first field desk for collecting reports and coordinating volunteer response when networks go down.</p>
+          </div>
+          <div class="intro-actions">
+            <span class="clock-label"><span class="clock-icon" aria-hidden="true">◷</span> <span id="current-time">LOCAL TIME</span></span>
+            <button class="button button-dark" id="new-report-button" type="button"><span aria-hidden="true">＋</span> New report</button>
+          </div>
+        </section>
+
+        <div class="notice" id="storage-notice" role="status" hidden></div>
+
+        <section class="metrics" aria-label="Response overview">
+          <article class="metric-card metric-total">
+            <div class="metric-top"><span>ACTIVE REPORTS</span><span class="metric-icon">▤</span></div>
+            <div class="metric-bottom"><strong id="metric-total">0</strong><span>on this device</span></div>
+          </article>
+          <article class="metric-card metric-critical">
+            <div class="metric-top"><span>NEEDS ATTENTION</span><span class="metric-icon">!</span></div>
+            <div class="metric-bottom"><strong id="metric-attention">0</strong><span>high urgency</span></div>
+          </article>
+          <article class="metric-card metric-open">
+            <div class="metric-top"><span>AWAITING REVIEW</span><span class="metric-icon">◷</span></div>
+            <div class="metric-bottom"><strong id="metric-review">0</strong><span>volunteer follow-up</span></div>
+          </article>
+          <article class="metric-card metric-locations">
+            <div class="metric-top"><span>LOCATED</span><span class="metric-icon">⌖</span></div>
+            <div class="metric-bottom"><strong id="metric-located">0</strong><span>reports with coordinates</span></div>
+          </article>
+        </section>
+
+        <section class="workspace-grid">
+          <article class="panel map-panel">
+            <div class="panel-heading">
+              <div><p class="panel-kicker">FIELD OVERVIEW</p><h2>Priority map</h2></div>
+              <span class="map-mode"><span class="map-mode-dot"></span> DEVICE PLOT</span>
+            </div>
+            <p class="panel-subtitle">A relative plot from saved coordinates. Not a street map; no tiles or network lookup.</p>
+            <div class="map-canvas" id="map-canvas" aria-label="Relative coordinate plot of located reports">
+              <svg class="map-art" viewBox="0 0 900 410" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <pattern id="grid" width="45" height="41" patternUnits="userSpaceOnUse"><path d="M45 0H0V41" fill="none" stroke="#dce5df" stroke-width="1"/></pattern>
+                  <pattern id="hatch" width="8" height="8" patternTransform="rotate(35)" patternUnits="userSpaceOnUse"><line x1="0" y1="0" x2="0" y2="8" stroke="#e6ebe4" stroke-width="2"/></pattern>
+                </defs>
+                <rect width="900" height="410" fill="url(#grid)"/>
+                <path d="M0 278c87-36 106-19 161-62 47-37 84-26 128-63 39-33 86-24 112-66 16-25 46-26 67-10 34 27 75 20 100 48 28 31 54 28 91 19 54-13 81 26 111 33 47 11 67 34 130 21v212H0Z" fill="url(#hatch)" opacity=".72"/>
+                <path d="M0 278c87-36 106-19 161-62 47-37 84-26 128-63 39-33 86-24 112-66 16-25 46-26 67-10 34 27 75 20 100 48 28 31 54 28 91 19 54-13 81 26 111 33 47 11 67 34 130 21" fill="none" stroke="#cdd8cd" stroke-width="2" stroke-dasharray="5 7"/>
+              </svg>
+              <div class="map-coordinates coordinate-nw" aria-hidden="true">22°20′ N</div>
+              <div class="map-coordinates coordinate-se" aria-hidden="true">88°50′ E</div>
+              <div class="map-empty" id="map-empty">
+                <span class="map-empty-icon" aria-hidden="true">⌖</span>
+                <strong>No coordinates yet</strong>
+                <span>Load the sample reports or add a location to a new report.</span>
+              </div>
+              <div class="map-points" id="map-points"></div>
+              <div class="map-caption"><span class="legend-dot high"></span> HIGH <span class="legend-dot medium"></span> MEDIUM <span class="legend-dot low"></span> LOW</div>
+            </div>
+            <div class="map-footer"><span><strong id="map-count">0</strong> located reports</span><span class="map-footer-note"><span aria-hidden="true">⌖</span> Manual coordinates · relative view</span></div>
+          </article>
+
+          <aside class="panel attention-panel">
+            <div class="panel-heading">
+              <div><p class="panel-kicker">VOLUNTEER QUEUE</p><h2>Priority inbox</h2></div>
+              <span class="count-pill" id="queue-count">0</span>
+            </div>
+            <p class="panel-subtitle">High urgency, then reports needing review.</p>
+            <div class="priority-list" id="priority-list"></div>
+            <button class="button button-quiet" id="load-demo-button" type="button">
+              <span aria-hidden="true">✳</span> Load Sundarbans demo reports
+            </button>
+            <p class="demo-hint">Adds four fictional examples. Existing reports are never replaced.</p>
+          </aside>
+        </section>
+
+        <section class="panel reports-panel">
+          <div class="reports-heading">
+            <div><p class="panel-kicker">ON THIS DEVICE</p><h2>All reports <span id="all-count" class="heading-count">0</span></h2></div>
+            <label class="search-box"><span aria-hidden="true">⌕</span><input id="search-input" type="search" placeholder="Search reports or areas…" autocomplete="off"></label>
+          </div>
+          <div class="filter-row">
+            <div class="filters" role="group" aria-label="Filter reports">
+              <button class="filter-button active" type="button" data-filter="all">All</button>
+              <button class="filter-button" type="button" data-filter="high">High priority</button>
+              <button class="filter-button" type="button" data-filter="needs_review">Needs review</button>
+              <button class="filter-button" type="button" data-filter="resolved">Resolved</button>
+            </div>
+            <span class="privacy-note"><span aria-hidden="true">▣</span> Private to this browser</span>
+          </div>
+          <div id="report-list" class="report-list"></div>
+          <div class="empty-state" id="reports-empty">
+            <span class="empty-state-icon" aria-hidden="true">↗</span>
+            <strong>Your local field log starts here</strong>
+            <span>Load the fictional Sundarbans scenario or record a new report. Nothing is sent to a server.</span>
+            <button class="button button-outline" id="empty-demo-button" type="button">Load demo reports</button>
+          </div>
+        </section>
+        <footer class="footer"><span><strong>POCKET BLACK BOX</strong> <span class="footer-separator">/</span> OFFLINE FIELD DEMO</span><span>Local browser storage · No live emergency dispatch</span></footer>
+      </main>
+    </div>
+
+    <dialog id="report-dialog" class="report-dialog">
+      <form id="report-form" method="dialog">
+        <div class="dialog-heading">
+          <div><p class="panel-kicker">LOCAL FIELD LOG</p><h2>New report</h2></div>
+          <button class="close-button" id="close-dialog" type="button" aria-label="Close">×</button>
+        </div>
+        <p class="dialog-intro">Describe what is happening. Offline triage will suggest needs for a volunteer to review.</p>
+        <div class="notice dialog-notice" id="dialog-notice" role="status" hidden></div>
+        <label class="field-label" for="report-text">What happened? <span>Required</span></label>
+        <textarea id="report-text" name="text" rows="4" minlength="8" required placeholder="Example: Two families need drinking water at the school shelter…"></textarea>
+        <div class="triage-bar"><span class="triage-spark" aria-hidden="true">✳</span><span>On-device keyword suggestions only</span><button id="suggest-button" class="suggest-button" type="button">Suggest triage</button></div>
+        <div class="form-grid">
+          <label class="field-label">Urgency
+            <select id="report-urgency" name="urgency"><option value="high">High</option><option value="medium" selected>Medium</option><option value="low">Low</option></select>
+          </label>
+          <label class="field-label">Volunteer status
+            <select id="report-status" name="status"><option value="needs_review" selected>Needs review</option><option value="open">Open</option><option value="assigned">Assigned</option><option value="resolved">Resolved</option></select>
+          </label>
+        </div>
+        <fieldset class="need-fieldset"><legend class="field-label">Needs <span>Choose all that apply</span></legend>
+          <div class="need-options">
+            <label><input type="checkbox" name="need" value="medical"> Medical</label>
+            <label><input type="checkbox" name="need" value="rescue"> Rescue</label>
+            <label><input type="checkbox" name="need" value="food"> Food</label>
+            <label><input type="checkbox" name="need" value="water"> Water</label>
+            <label><input type="checkbox" name="need" value="shelter"> Shelter</label>
+            <label><input type="checkbox" name="need" value="access"> Access</label>
+          </div>
+        </fieldset>
+        <div class="form-grid location-grid">
+          <label class="field-label">Area or landmark
+            <input id="report-area" name="area" type="text" maxlength="100" placeholder="e.g. Kakdwip ferry landing">
+          </label>
+          <div class="coordinate-fields">
+            <label class="field-label">Latitude <input id="report-latitude" name="latitude" type="number" step="any" min="-90" max="90" placeholder="21.95"></label>
+            <label class="field-label">Longitude <input id="report-longitude" name="longitude" type="number" step="any" min="-180" max="180" placeholder="88.25"></label>
+          </div>
+        </div>
+        <div class="dialog-actions"><span class="dialog-local-note"><span aria-hidden="true">▣</span> Saved only in this browser</span><button class="button button-dark" type="submit">Save report <span aria-hidden="true">→</span></button></div>
+      </form>
+    </dialog>
+    <script src="./app.js"></script>
+  </body>
+</html>

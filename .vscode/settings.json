@@ -1,0 +1,10 @@
+{
+    "chat.editor.preferCopilotHarness": false,
+    "chat.defaultToCopilotHarness": false,
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "chat.agent.maxRequests": 9999,
+    "debug.onTaskErrors": "debugAnyway",
+    "files.exclude": {
+        "**/node_modules": true
+    }
+}

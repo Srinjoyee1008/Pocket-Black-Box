@@ -1,0 +1,9 @@
+{
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "types": ["jest", "react", "react-native"]
+  },
+  "include": ["src", "App.tsx", "tests"]
+}

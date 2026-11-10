@@ -1,0 +1,5 @@
+{
+  "text": "API smoke test report - safe to identify by its smoke-test label.",
+  "needs": ["water"],
+  "urgency": "medium"
+}

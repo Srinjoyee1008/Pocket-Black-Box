@@ -1,0 +1,104 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "label": "pocket-black-box-android: Metro start",
+      "command": "npm.cmd start",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/pocket-black-box-android"
+      },
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      },
+      "problemMatcher": {
+        "owner": "metro",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Welcome to Metro",
+          "endsPattern": "Dev server ready"
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "pocket-black-box-android-demo-site: Static server start",
+      "command": "py -c \"import socket,urllib.request,sys,os; s=socket.socket(); busy=s.connect_ex(('127.0.0.1',4173))==0; s.close(); page=urllib.request.urlopen('http://127.0.0.1:4173/').read() if busy else b''; print('Pocket Black Box demo already serving') if b'Pocket Black Box' in page else os.execl(sys.executable,sys.executable,'-m','http.server','4173','--bind','127.0.0.1','--directory',os.getcwd())\"",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/pocket-black-box-android/demo-site"
+      },
+      "isBackground": true,
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      },
+      "problemMatcher": {
+        "owner": "static-web",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Pocket Black Box demo already serving|^Serving HTTP",
+          "endsPattern": "Pocket Black Box demo already serving|^Serving HTTP on 127\\.0\\.0\\.1 port 4173"
+        }
+      }
+    },
+    {
+      "label": "local-services: Start client and browser demo",
+      "dependsOn": [
+        "pocket-black-box-android: Metro start",
+        "pocket-black-box-android-demo-site: Static server start"
+      ],
+      "dependsOrder": "sequence",
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "pocket-black-box-android: Jest tests",
+      "command": "npm.cmd test",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/pocket-black-box-android"
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "pocket-black-box-android: TypeScript check",
+      "command": "npm.cmd run typecheck",
+      "options": {
+        "cwd": "${workspaceFolder}/apps/pocket-black-box-android"
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      }
+    },
+    {
+      "type": "shell",
+      "label": "pocket-black-box-processor: pytest",
+      "command": "python -m pytest",
+      "options": {
+        "cwd": "${workspaceFolder}/processor"
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "silent"
+      }
+    }
+  ]
+}

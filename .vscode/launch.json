@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {"name":"Python Debugger: Current File","type":"debugpy","request":"launch","program":"${file}","console":"integratedTerminal"},
+    {
+      "name": "Pocket Black Box Android (debug)",
+      "type": "reactnative",
+      "request": "launch",
+      "platform": "android",
+      "cwd": "${workspaceFolder}/apps/pocket-black-box-android",
+      "preLaunchTask": "pocket-black-box-android: Metro start"
+    },
+    {
+      "name": "Pocket Black Box Processor (debug)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "app.main",
+      "cwd": "${workspaceFolder}/processor",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Pocket Black Box Browser Demo (debug)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:4173/",
+      "webRoot": "${workspaceFolder}/apps/pocket-black-box-android/demo-site",
+      "preLaunchTask": "pocket-black-box-android-demo-site: Static server start"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug All Local Services",
+      "configurations": [
+        "Pocket Black Box Android (debug)",
+        "Pocket Black Box Processor (debug)",
+        "Pocket Black Box Browser Demo (debug)"
+      ],
+      "preLaunchTask": "local-services: Start client and browser demo",
+      "stopAll": true
+    }
+  ]
+}

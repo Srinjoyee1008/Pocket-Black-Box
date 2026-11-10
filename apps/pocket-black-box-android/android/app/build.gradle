@@ -1,0 +1,32 @@
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+react { autolinkLibrariesWithApp() }
+
+android {
+    namespace "com.pocketblackbox"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.pocketblackbox"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug { debuggable true }
+        release { minifyEnabled false }
+    }
+}
+
+dependencies {
+    implementation("com.facebook.react:react-android")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation("org.webkit:android-jsc:+")
+    }
+}
